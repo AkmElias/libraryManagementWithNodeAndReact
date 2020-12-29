@@ -35,6 +35,7 @@ exports.signup = async (req,res,next) => {
  }
 }
 
+
 exports.login = async (req,res,next) => {
      //validate before creating a new user
      const {error} = loginValidation(req.body)
@@ -47,14 +48,17 @@ exports.login = async (req,res,next) => {
         return res.status(400).send("Email or Password is wrong!")
      
      //checking password 
+     // @ts-ignore
      const validPass = await bcrypt.compare(req.body.Password,user.Password)
      if(!validPass)
         return res.status(400).send("Email or Password is wrong!")
 
     //Create and assign token
+    // @ts-ignore
     const token = jwt.sign({_id: user._id,role: user.Role}, process.env.TOKEN_SECRET)
     res.header('auth-token', token).send({"token": token})
 }
+
 
 exports.getUser = async (req,res,next) => {
     try{
@@ -64,6 +68,7 @@ exports.getUser = async (req,res,next) => {
        res.status(400).json({message: err})
       }
 }
+
 
 exports.editUser = async (req,res,next) => {
     if(req.user._id != req.body.userId) return res.status(401).send("You are not permitted for this action!")
@@ -75,17 +80,8 @@ exports.editUser = async (req,res,next) => {
     }
 }
 
+
 exports.deleteUser = async (req,res,next) => {
-     //cheking the user Role
-     let userRole;
-    //  try{
-    //      const user = await User.findOne({_id: req.user._id})
-    //      userRole = user.Role;
-    //      res.json(user)
-    //  }catch(err) {
-    //      res.status(400).json({message: err})
-    //     }
- 
      if(req.user._id == req.body.userId || req.user.role === "admin") {
          try{
              const user =  await User.deleteOne({_id: req.params.userId})
@@ -97,6 +93,17 @@ exports.deleteUser = async (req,res,next) => {
      else return res.status(401).send("You are not permitted for this action!")
 }
 
-exports.getUsers = (req,res,next) => {
-    res.status(200).send('Here are the users')
+
+exports.getUsers = async (req,res,next) => {
+    
+   if(req.user.role === "admin") {
+      try{
+        const users = await User.find();
+        res.status(200).send(users);
+      } catch (err) {
+          next(err)
+      }
+   } else {
+    return res.status(401).send("Not authorized for this action.");
+   }
 }

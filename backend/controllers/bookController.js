@@ -9,6 +9,8 @@ const verify = require("../verifytoken");
 const Book = require("../models/Book");
 const User = require("../models/User");
 const Review = require("../models/Review")
+const Bookmark = require('../models/Bookmark');
+
 const { bookValidation } = require("../validation");
 
 exports.getBooks = async (req, res, next) => {
@@ -66,6 +68,21 @@ exports.viewBook = async (req,res,next) => {
     res.status(200).send(everythingAboutTheBook)
     } catch(err) {
         res.status(400).json({ message: err });
+    }
+}
+
+exports.bookmark = async (req,res,next) => {
+   
+    const bookMark = new Bookmark({
+        userId: req.user._id,
+        bookId: req.params.bookId
+    })
+
+    try{
+      const bookmarked = await bookMark.save()
+      res.status(201).send(bookmarked)
+    } catch(err) {
+      res.status(401).send(err)
     }
 }
 
@@ -137,3 +154,4 @@ exports.addReview = async (req,res,next) => {
         res.status(401).send(err)
     }
 }
+

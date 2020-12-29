@@ -12,5 +12,6 @@ router.patch('/:bookId', verify,booksController.editBook);
 router.delete('/:bookId',verify, booksController.deleteBook);
 router.post('/reviews/:bookId', verify, booksController.addReview);
 router.get('/reviews/:bookId',verify,booksController.viewBook);
+router.post('/bookmark/:bookId',verify,booksController.bookmark);
 
 module.exports = router;
