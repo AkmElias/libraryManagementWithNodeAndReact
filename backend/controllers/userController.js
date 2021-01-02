@@ -56,7 +56,8 @@ exports.login = async (req, res, next) => {
     { _id: user._id, role: user.Role },
     process.env.TOKEN_SECRET
   );
-  res.header("auth-token", token).send({ token: token });
+
+  res.header("auth-token", token).send({ token: token, user: {_id: user._id, name: user.Name, role: user.Role} });
 };
 
 
@@ -81,7 +82,7 @@ exports.googleLogin = async (req,res,next) => {
                 process.env.TOKEN_SECRET
               );
              // console.log('auth-token',token)
-             res.header("auth-token", token).send({ token: token });
+             res.header("auth-token", token).send({ token: token, user: {_id: user._id, name: user.Name,role: user.Role} });
             } else {
               let hashedPassword = bcrypt.hashSync(email + name , 8);
               const user = new User({
