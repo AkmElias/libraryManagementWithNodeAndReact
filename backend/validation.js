@@ -23,7 +23,7 @@ const bookValidation = data => {
     const schema = Joi.object({
         name: Joi.string().min(4).required(),
         author: Joi.string().min(4).required(),
-        category: Joi.date().required(),
+        category: Joi.string().required(),
     })
 
     return schema.validate(data)

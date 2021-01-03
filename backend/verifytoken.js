@@ -5,6 +5,7 @@ module.exports = function(req,res,next) {
     if(!token) return res.status(401).send("access denied!");
 
     try{
+        console.log('auth-token:',token)
        const veryfied = jwt.verify(token,process.env.TOKEN_SECRET);
        if(veryfied) req.user = veryfied;
        next()

@@ -100,10 +100,10 @@ exports.editBook = async (req, res, next) => {
     } catch (err) {
       res.status(400).json({ message: err });
     }
-
+    //console.log('book id:',req.body)
     //updating
     try {
-      const book = await Book.updateOne({ _id: req.params.bookId }, req.body);
+      const book = await Book.updateOne({ _id: req.params.bookId }, {category: req.body.book.category,paid:req.body.book.paid,price:req.body.book.price});
       res.status(201).json(book);
     } catch (err) {
       res.status(400).json({ message: err });
