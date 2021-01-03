@@ -5,6 +5,7 @@ import Home from './Home'
 import Header from './Header'
 import Login from "./Login";
 import Signup from "./Signup";
+import Books from "./Books";
 import './App.css';
 
 function App() {
@@ -19,6 +20,10 @@ function App() {
        <Route path='/sign-in'>
           <Header />
           <Login />
+       </Route>
+       <Route path='/books'>
+          <Header />
+          <Books />
        </Route>
        <Route path='/'>
           <Header />

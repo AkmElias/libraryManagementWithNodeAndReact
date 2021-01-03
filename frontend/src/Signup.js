@@ -104,7 +104,7 @@ function Signup() {
               Sign Up
             </button>
             <p className="forgot-password text-right">
-              Already registered! <Link to="/sign-in">sign in?</Link>
+              Already registered! <Link to="/books">sign in?</Link>
             </p>
           </form>
         </div>

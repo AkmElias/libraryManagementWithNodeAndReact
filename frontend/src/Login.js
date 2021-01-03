@@ -33,7 +33,12 @@ function Login() {
         // alert(`Token: ${data}`)
         await dispatch({
           type: "SET_USER",
-          user: data.user,
+          user: {
+            token: data.token,
+            _id: data.user._id,
+            name: data.user.name,
+            role: data.user.role
+          },
         });
         history.push("/sign-up");
       })

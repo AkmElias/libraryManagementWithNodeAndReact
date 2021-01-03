@@ -1,0 +1,13 @@
+.books{
+    margin: 20px;
+    padding: 40px;
+}
+
+.books__filter{
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.books__table{
+  padding: 20px;
+  margin: 10px;
+}
