@@ -9,6 +9,7 @@ import ViewCompactIcon from "@material-ui/icons/ViewCompact";
 import UpdateIcon from "@material-ui/icons/Update";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import UpdateBook from "./UpdateBook";
+import ViewBook from "./ViewBook";
 import "./Books.css";
 import { useStateValue } from "./globalState/StateProvider";
 
@@ -97,29 +98,33 @@ function Books() {
     setTrigger(false);
   };
 
+  const goToViewBook = (id) => {
+    history.push(`/book/${id}`);
+  };
+
   const deleteBook = (id) => {
-    if(window.confirm("Are you sure to delete this Book")){
+    if (window.confirm("Are you sure to delete this Book")) {
       let newBookList = booksList.filter((book) => book._id != id);
       setBooksList(newBookList);
-    //   fetch(`http://localhost:8080/books/${id}`, {
-    //     method: "DELETE",
-    //     headers: {
-    //       Accept: "application/json",
-    //       "Content-Type": "application/json",
-    //       "auth-token": user.token,
-    //     },
-    //   })
-    //     .then((response) => {
-    //       return response.json();
-    //     })
-    //     .then((data) => {
-    //       console.log("deleted book: ", data);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
+      //   fetch(`http://localhost:8080/books/${id}`, {
+      //     method: "DELETE",
+      //     headers: {
+      //       Accept: "application/json",
+      //       "Content-Type": "application/json",
+      //       "auth-token": user.token,
+      //     },
+      //   })
+      //     .then((response) => {
+      //       return response.json();
+      //     })
+      //     .then((data) => {
+      //       console.log("deleted book: ", data);
+      //     })
+      //     .catch((err) => {
+      //       console.log(err);
+      //     });
     } else {
-        return;
+      return;
     }
   };
 
@@ -229,49 +234,65 @@ function Books() {
                 </tr>
               </thead>
               <tbody>
-                {booksList.length > 0? booksList.map((book, key) => (
-                  <tr>
-                    <td>1</td>
-                    <td>{book.name}</td>
-                    <td>{book.author}</td>
-                    <td>{book.category}</td>
-                    <td>{book.rating}</td>
-                    <td>${book.paid === true ? book.price : 0}</td>
-                    <td>
-                      <Popup
-                        trigger={
-                          <button className="btn">
-                            <UpdateIcon />
-                          </button>
-                        }
-                        closeOnDocumentClick="bool | true"
-                        position="center left"
-                      >
-                        {(close) => (
-                          <UpdateBook
-                            book={book}
-                            close={close}
-                            fetchBooks={fetchBooks}
-                          />
-                        )}
-                      </Popup>
-                    </td>
-                    {user?.role === "admin" && (
+                {booksList.length > 0 ? (
+                  booksList.map((book, key) => (
+                    <tr>
+                      <td>1</td>
+                      <td>{book.name}</td>
+                      <td>{book.author}</td>
+                      <td>{book.category}</td>
+                      <td>{book.rating}</td>
+                      <td>${book.paid === true ? book.price : 0}</td>
+                      {user?.role === "admin" && (
+                        <td>
+                          <Popup
+                            trigger={
+                              <button className="btn">
+                                <UpdateIcon />
+                              </button>
+                            }
+                            closeOnDocumentClick="bool | true"
+                            position="center left"
+                          >
+                            {(close) => (
+                              <UpdateBook
+                                book={book}
+                                close={close}
+                                fetchBooks={fetchBooks}
+                              />
+                            )}
+                          </Popup>
+                        </td>
+                      )}
+
                       <td>
-                        <button className="btn">
+                        {/* <button className='btn' onClick = {() => goToViewBook(book._id)}>
                           <ViewCompactIcon />
-                        </button>
+                         </button>
+                        */}
+
+                        <Link to={`/book/${book._id}`}>
+                          <ViewCompactIcon />
+                        </Link>
                       </td>
-                    )}
-                    {user?.role === "admin" && (
-                      <td>
-                        <button className="btn" onClick={() => deleteBook(book._id)}>
-                          <DeleteForeverIcon />
-                        </button>
-                      </td>
-                    )}
-                  </tr>
-                )): (<h4 className='text-center'>The book list in the Library is currently Empty!</h4>)}
+
+                      {user?.role === "admin" && (
+                        <td>
+                          <button
+                            className="btn"
+                            onClick={() => deleteBook(book._id)}
+                          >
+                            <DeleteForeverIcon />
+                          </button>
+                        </td>
+                      )}
+                    </tr>
+                  ))
+                ) : (
+                  <h4 className="text-center">
+                    The book list in the Library is currently Empty!
+                  </h4>
+                )}
               </tbody>
             </Table>
           </div>

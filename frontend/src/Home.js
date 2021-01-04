@@ -19,7 +19,7 @@ function Home() {
       console.log("user..", user);
       history.push("/sign-up");
     } else {
-      history.push('/sign-up')
+      history.push('/books')
     }
     return () => {};
   }, []);

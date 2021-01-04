@@ -1,0 +1,30 @@
+.reviews{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40px;
+    margin: 20px;
+    background-color: #fffccc;
+}
+
+.reviews__review{
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    margin: 10px;
+    background-color: #ccc;
+}
+.span{
+    font-size: 18px;
+    font-weight: 700;
+    padding: 5px;
+    color: rgb(14, 130, 168);
+}
+
+label{
+    margin-right: 10px;
+}
+
+h4{
+    color: rgb(14, 19, 1);
+}

@@ -17,6 +17,7 @@ function Login() {
     }
     return () => {};
   }, []);
+  
   const login = async (Email, Password) => {
     await fetch("http://localhost:8080/auth/login/", {
       method: "POST",
@@ -40,7 +41,7 @@ function Login() {
             role: data.user.role
           },
         });
-        history.push("/sign-up");
+        history.push("/books");
       })
       .catch((error) => {
         console.log(error);

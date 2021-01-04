@@ -1,0 +1,68 @@
+.viewBook{
+    padding: 40px;
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.viewBook__title{
+    color: rgb(19, 124, 156);
+    padding: 10px;
+    font-size: 25px;
+    font-weight: 700;
+    background-color:rgb(175, 165, 165);
+    margin-bottom: 5px;
+}
+
+.viewBook__info{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: #f0e554;
+    padding: 40px;
+    margin: 20px;
+    width: 100%;
+    height: fit-content;
+    background-color: #555;
+}
+
+.viewBook__info > p{
+    padding: 10px;
+    font-weight: 500;
+    font-size: 12px;
+}
+
+.span{
+    font-size: 18px;
+    font-weight: 700;
+    padding: 5px;
+    color: rgb(14, 130, 168);
+}
+
+.viewBook__addReview{
+    background-color: #ccc;
+    padding: 40px;
+    margin: 20px;
+}
+
+.reviewComment{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin: 5px;
+}
+
+.reviewRating{
+    display: flex !important;
+    align-items: center !important;
+    padding: 10px !important;
+    margin: 5px !important;
+}
+label{
+    margin-right: 10px;
+}
+
+h4{
+    color: rgb(14, 19, 1);
+}

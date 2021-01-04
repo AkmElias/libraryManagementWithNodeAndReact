@@ -66,7 +66,7 @@ body, html, .App, #root, .auth-wrapper {
 
 .app-body{
   max-width: 1100px;
-  height: 100vh;
+  height: 100%;
   margin-right: auto;
   margin-left: auto;
   margin-top: 0px;

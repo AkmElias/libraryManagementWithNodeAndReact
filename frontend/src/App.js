@@ -6,6 +6,7 @@ import Header from './Header'
 import Login from "./Login";
 import Signup from "./Signup";
 import Books from "./Books";
+import ViewBook from './ViewBook'
 import './App.css';
 
 function App() {
@@ -24,6 +25,10 @@ function App() {
        <Route path='/books'>
           <Header />
           <Books />
+       </Route>
+       <Route path='/book/:bookId'>
+          <Header />
+          <ViewBook />
        </Route>
        <Route path='/'>
           <Header />
