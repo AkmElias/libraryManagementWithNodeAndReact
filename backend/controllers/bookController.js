@@ -1,3 +1,4 @@
+// @ts-nocheck
 const express = require("express");
 const mongodb = require('mongodb');
 
@@ -61,8 +62,11 @@ exports.viewBook = async (req,res,next) => {
        bookName: book.name,
        // @ts-ignore
        bookAuthor: book.author,
+       bookCategory: book.category,
        // @ts-ignore
        bookPrice: book.price ,
+       bookRating: book.rating,
+       bookPaid: book.paid,
        reviews:  reviews  
     }
     res.status(200).send(everythingAboutTheBook)
@@ -87,13 +91,14 @@ exports.bookmark = async (req,res,next) => {
 }
 
 exports.editBook = async (req, res, next) => {
-  if (req.user.role === "admin") {
+  if (req.user.role === "admin" || req.user.role === "user") {
     //  //checking validation
     //  const {error} = bookValidation(req.body);
     //  if (error)
     //  return res.status(400).send({message: error.details[0].message})
 
     //checking if the book is in DB
+    console.log(req.body.book)
     try {
       const book = await Book.findById({ _id: req.params.bookId });
       if (!book) return res.status(401).send("Book doesn't exist!");
@@ -103,7 +108,7 @@ exports.editBook = async (req, res, next) => {
     //console.log('book id:',req.body)
     //updating
     try {
-      const book = await Book.updateOne({ _id: req.params.bookId }, {category: req.body.book.category,paid:req.body.book.paid,price:req.body.book.price});
+      const book = await Book.updateOne({ _id: req.params.bookId }, req.body.book);
       res.status(201).json(book);
     } catch (err) {
       res.status(400).json({ message: err });
