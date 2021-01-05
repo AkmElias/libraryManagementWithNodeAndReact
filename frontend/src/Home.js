@@ -17,7 +17,7 @@ function Home() {
   useEffect(() => {
     if (!user) {
       console.log("user..", user);
-      history.push("/sign-up");
+      history.push("/sign-in");
     } else {
       history.push('/books')
     }

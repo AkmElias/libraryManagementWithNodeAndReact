@@ -1,4 +1,14 @@
-.fav-icon {
+.bookmark {
     color: yellow !important;
 }
 
+#twitterText,
+#facebookText,
+#instagramText {
+  display: none;
+}
+
+.bookmark:hover ~ #twitterText{
+    display: block;
+
+}

@@ -16,6 +16,7 @@ import { useStateValue } from "./globalState/StateProvider";
 function Books() {
   const { register, handleSubmit, errors } = useForm();
   const [booksList, setBooksList] = useState([]);
+  const [tempBooklist,setTempBookList] = useState([]);
   const [ucategory, setUcategory] = useState("");
   const [uprice, setUprice] = useState(0);
   const [upaid, setUpaid] = useState("");
@@ -40,6 +41,7 @@ function Books() {
       })
       .then((books) => {
         setBooksList(books);
+        setTempBookList(books);
         console.log("response in booksList..", booksList);
       })
       .catch((err) => {
@@ -127,6 +129,22 @@ function Books() {
       return;
     }
   };
+
+  const tableFilter = (search) => {
+    console.log("search: ",search)
+    // if(search === ""){
+    //   setBooksList(tempBooklist)
+    // } else {
+    //   let tempBooks = booksList.filter(book => {
+    //     return book.name === search || book.author === search || book.category === search
+    //   })
+    //   setBooksList(tempBooks)
+    //   console.log('list',tempBooks)
+    // }
+
+    setBooksList(tempBooklist.filter(book => (book.name.includes(search) || book.author.includes(search) || book.category.includes(search))))
+    
+  }
 
   return (
     <div className="auth-wrapper">
@@ -219,6 +237,8 @@ function Books() {
               )}{" "}
               <h4 className="books__tableTitle">Books List</h4>{" "}
             </div>
+            <div className='form-group'><input className='search__input' type="text" id="myInput"
+             onChange={event => tableFilter(event.target.value)} placeholder="Filter books by name/author/category.."/></div>
             <Table striped bordered hover size="sm">
               <thead>
                 <tr>
@@ -241,7 +261,7 @@ function Books() {
                       <td>{book.name}</td>
                       <td>{book.author}</td>
                       <td>{book.category}</td>
-                      <td>{book.rating}</td>
+                      <td>{book.rating.toFixed(2)}</td>
                       <td>${book.paid === true ? book.price : 0}</td>
                       {user?.role === "admin" && (
                         <td>
@@ -289,9 +309,9 @@ function Books() {
                     </tr>
                   ))
                 ) : (
-                  <h4 className="text-center">
+                  <p className="text-center">
                     The book list in the Library is currently Empty!
-                  </h4>
+                  </p>
                 )}
               </tbody>
             </Table>

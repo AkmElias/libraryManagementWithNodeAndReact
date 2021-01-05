@@ -34,12 +34,7 @@ function Login() {
         // alert(`Token: ${data}`)
         await dispatch({
           type: "SET_USER",
-          user: {
-            token: data.token,
-            _id: data.user._id,
-            name: data.user.name,
-            role: data.user.role
-          },
+          user: data.user
         });
         history.push("/books");
       })
@@ -50,7 +45,7 @@ function Login() {
 
   const onSubmit = async ({ Email, Password }) => {
     // event.preventDefault();
-    alert(`${Email} ${Password}`);
+    //alert(`${Email} ${Password}`);
     login(Email, Password);
   };
 
@@ -72,7 +67,7 @@ function Login() {
           type: "SET_USER",
           user: data.user,
         });
-        history.push("/sign-up");
+        history.push("/books");
       })
       .catch((error) => {
         console.log(error);

@@ -35,7 +35,7 @@ function Header() {
     <div className="header">
       <nav className="navbar navbar-expand-lg navbar-light fixed-top">
         <div className="container">
-          <Link className="navbar-brand btn" to={"/sign-in"}>
+          <Link className="navbar-brand btn" to={"/"}>
             <h5 className=''>Library Management</h5>
           </Link>
           <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
@@ -55,7 +55,7 @@ function Header() {
                   </Link>
                 </li>
               )}
-              {user && (<li className="nav-item btn fav-icon"><Link to='/favorite-books'><FavoriteIcon /></Link></li>)}
+              {user && (<li className="nav-item btn bookmark"><Link to='/books'><FavoriteIcon /></Link></li>)}
               {user && (<li className="nav-item btn"><Link to='/' className='user-name'>{user.name}</Link></li>)}
               {user && (<li className="nav-item btn btn-primary" onClick={logout}>Logout</li>)}
             </ul>

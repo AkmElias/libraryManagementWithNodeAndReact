@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import ReactStars from "react-rating-stars-component";
 import StarRatings from "react-star-ratings";
+import FavoriteIcon from "@material-ui/icons/Favorite";
 import { useForm } from "react-hook-form";
 import { useStateValue } from "./globalState/StateProvider";
 import Reviews from './Reviews';
@@ -39,17 +40,9 @@ function ViewBook(props) {
 
     setEverythingAoutABook(response);
     console.log("response..", response);
-    let rate = 0.0;
+    setRating(response.bookRating)
     setReviews(response.reviews);
-    reviews?.forEach((review) => {
-      rate += review.rating;
-      console.log("rating..", review.rating);
-    });
-    if (rate === 0.0) rate = 5;
-    else rate = rate /  response.reviews?.length;
-
-    setRating(rate);
-    console.log("ratinf gor the book: ", response.reviews);
+    console.log("rating gor the book: ", response.reviews);
   };
 
   useEffect(async () => {
@@ -68,7 +61,12 @@ function ViewBook(props) {
   };
 
   const addReview = () => {
-    if (givenRating !== 0  && comment) {
+    if (givenRating !== 0  && comment !== "") {
+      let rate = givenRating;
+      reviews.map(review => rate+= review.rating)
+      rate = rate/reviews.length
+      rate = rate.toFixed(2)
+      console.log('latest rating: after devide: ',rate)
      
       fetch(
         "http://localhost:8080/books/reviews/" +
@@ -103,7 +101,7 @@ function ViewBook(props) {
             category: everythingAboutABook?.bookCategory,
             price: everythingAboutABook?.bookPrice,
             paid: everythingAboutABook?.bookPaid,
-            rating: rating
+            rating: rate
     
           }
           fetch(`http://localhost:8080/books/${ window.location.pathname.split("/")[2]}`, {
@@ -136,11 +134,15 @@ function ViewBook(props) {
      }
   }
 
+  const bookMarkBook = (id) => {
+    alert("book marked!")
+  }
+
   return (
     <div className="auth-wrapper">
       <div className="container">
         <div className="app-body text-center viewBook">
-          <p className="viewBook__title">{everythingAboutABook?.bookName}</p>
+          <p className="viewBook__title">{everythingAboutABook?.bookName}</p> 
           <hr></hr>
           <div className="vewBook__info">
             <h4>
@@ -173,6 +175,8 @@ function ViewBook(props) {
               </p>
             </p>
           </div>
+          {/* <hr></hr>
+          <button onClick={() => bookMarkBook(everythingAboutABook.bookId)}> <FavoriteIcon /> </button> */}
           <hr></hr>
            <button className='btn btn-primary btn-block' onClick ={() => goFoeward(everythingAboutABook.bookPrice)}>Buy/Read</button>
           <hr></hr>
@@ -183,7 +187,7 @@ function ViewBook(props) {
                 <div className="reviewComment">
                   <h4>Comment:</h4>
                   <textarea
-                    name="message"
+                    name={comment}
                     rows="4"
                     cols="80"
                     placeholder="Your message..."
