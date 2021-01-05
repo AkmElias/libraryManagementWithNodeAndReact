@@ -168,6 +168,7 @@ function ViewBook(props) {
     })
       .then((response) => {
         console.log("payment response: ", response);
+        alert('You successfuly purchased the Book.')
       })
       .catch((err) => console.log(err));
   };

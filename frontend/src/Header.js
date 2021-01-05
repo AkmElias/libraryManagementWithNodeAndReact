@@ -55,7 +55,7 @@ function Header() {
                   </Link>
                 </li>
               )}
-              {user && (<li className="nav-item btn bookmark"><Link to='/books'><FavoriteIcon /></Link></li>)}
+              {/* {user && (<li className="nav-item btn bookmark"><Link to='/books'><FavoriteIcon /></Link></li>)} */}
               {user && (<li className="nav-item btn"><Link to='/' className='user-name'>{user.name}</Link></li>)}
               {user && (<li className="nav-item btn btn-primary" onClick={logout}>Logout</li>)}
             </ul>
