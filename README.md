@@ -20,23 +20,6 @@ Project descriptions:
 		3. Social authentication with 'google'
 		4. 'JOI' library used for model validation
 		5. POSTMAN used for api testing
-                  backend Api docs:
-		1. POST: http://localhost:8000/auth/signup --> normal registration which return resistered user id
-		2. POST: http://localhost:8080/auth/login --> normal login which return user basic info with auth-token
-		3. POST: http://localhost:8080/auth/googlelogin --> social login/registration with google 
-		4. GET: http://localhost:8080/auth/:userId  --> get a specific user whic needs authentication 
-		5. PATCH : http://localhost:8080/auth/:userId  --> update a user needs authentication with authorization
-		6. DELETE: http://localhost:8080/auth/:userId --> delete a user which need authentication with admin authorization
-		7. GET http://localhost:8080/auth/  --> get all user admin auth
-
-		8. GET: http://localhost:8080/books/ --> get all books need normal auth
-		9. POST: http://localhost:8080/books/addBook --> to insert book .needs admin auth
-		10.PATCH: http://localhost:8080/books/:bookId --> to update a book like from free to paid.. need admin authorization
-		11.DELETE:  http://localhost:8080/books/:bookId --> to delete need admin auth
-		12.POST: http://localhost:8080/books/reviews/:bookId --> normal auth
-		13. GET: http://localhost:8080/books/reviews/:bookId -> normal auth
-		14. POST: http://localhost:8080/books/bookmark/:bookId -> normal auth
-
 	frontend:
 		1. Build with reactjs .. index.js is the main file and whole app routing is in app.js
 		2. third party packages used: 
