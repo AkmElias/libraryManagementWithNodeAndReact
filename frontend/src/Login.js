@@ -40,6 +40,7 @@ function Login() {
       })
       .catch((error) => {
         console.log(error);
+        alert("something went wrong! maybe wrong pass/email")
       });
   };
 
@@ -71,6 +72,7 @@ function Login() {
       })
       .catch((error) => {
         console.log(error);
+        alert("something went wrong! maybe wrong pass/email")
       });
   };
 

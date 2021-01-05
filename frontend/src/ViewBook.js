@@ -5,8 +5,9 @@ import ReactStars from "react-rating-stars-component";
 import StarRatings from "react-star-ratings";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { useForm } from "react-hook-form";
+import StripeCheckout from "react-stripe-checkout";
 import { useStateValue } from "./globalState/StateProvider";
-import Reviews from './Reviews';
+import Reviews from "./Reviews";
 import "./ViewBook.css";
 
 function ViewBook(props) {
@@ -40,7 +41,8 @@ function ViewBook(props) {
 
     setEverythingAoutABook(response);
     console.log("response..", response);
-    setRating(response.bookRating)
+    console.log("pbkey:", process.env.REACT_APP_STRIPE_KEY);
+    setRating(response.bookRating);
     setReviews(response.reviews);
     console.log("rating gor the book: ", response.reviews);
   };
@@ -61,13 +63,13 @@ function ViewBook(props) {
   };
 
   const addReview = () => {
-    if (givenRating !== 0  && comment !== "") {
+    if (givenRating !== 0 && comment !== "") {
       let rate = givenRating;
-      reviews.map(review => rate+= review.rating)
-      rate = rate/reviews.length
-      rate = rate.toFixed(2)
-      console.log('latest rating: after devide: ',rate)
-     
+      reviews.map((review) => (rate += review.rating));
+      rate = rate / reviews.length;
+      rate = rate.toFixed(2);
+      console.log("latest rating: after devide: ", rate);
+
       fetch(
         "http://localhost:8080/books/reviews/" +
           window.location.pathname.split("/")[2] +
@@ -93,7 +95,7 @@ function ViewBook(props) {
         .then((data) => {
           console.log("review added..", data);
           setGivenRating(0);
-          setComment('')
+          setComment("");
           fetchInitialData();
           let book = {
             name: everythingAboutABook?.bookName,
@@ -101,25 +103,30 @@ function ViewBook(props) {
             category: everythingAboutABook?.bookCategory,
             price: everythingAboutABook?.bookPrice,
             paid: everythingAboutABook?.bookPaid,
-            rating: rate
-    
-          }
-          fetch(`http://localhost:8080/books/${ window.location.pathname.split("/")[2]}`, {
-            method: "PATCH",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              "auth-token": user.token,
-            },
-            body: JSON.stringify({ book }),
-          }).then(response => {
-              return response.json()
-          }).then(data => {
-            console.log('update response..', data)
-          });
-         
+            rating: rate,
+          };
+          fetch(
+            `http://localhost:8080/books/${
+              window.location.pathname.split("/")[2]
+            }`,
+            {
+              method: "PATCH",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "auth-token": user.token,
+              },
+              body: JSON.stringify({ book }),
+            }
+          )
+            .then((response) => {
+              return response.json();
+            })
+            .then((data) => {
+              console.log("update response..", data);
+            });
+
           alert("review Added!");
-          
         });
     } else {
       alert("Please Give comment with rating!");
@@ -127,22 +134,49 @@ function ViewBook(props) {
   };
 
   const goFoeward = (price) => {
-     if(price != 0) {
-       alert("You have to pay to read or buy this book")
-     } else {
-      alert("Well this is a dummy book which basically have no data!")
-     }
-  }
+    if (price != 0) {
+      alert("You have to pay to read or buy this book");
+    } else {
+      alert("Well this is a dummy book which basically have no data!");
+    }
+  };
 
   const bookMarkBook = (id) => {
-    alert("book marked!")
-  }
+    alert("book marked!");
+  };
+
+  const makePayment = async (token) => {
+    const product = {
+      name: everythingAboutABook.bookName,
+      price: everythingAboutABook.bookPrice,
+      productBy: "AkmElias",
+    };
+
+    const body = {
+      token,
+      product,
+    };
+
+    fetch("http://localhost:8080/books/payment/", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "auth-token": user.token,
+      },
+      body: JSON.stringify(body),
+    })
+      .then((response) => {
+        console.log("payment response: ", response);
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <div className="auth-wrapper">
       <div className="container">
         <div className="app-body text-center viewBook">
-          <p className="viewBook__title">{everythingAboutABook?.bookName}</p> 
+          <p className="viewBook__title">{everythingAboutABook?.bookName}</p>
           <hr></hr>
           <div className="vewBook__info">
             <h4>
@@ -155,7 +189,7 @@ function ViewBook(props) {
             </h4>
             <h4>
               <span className="span">Price: </span>{" "}
-              {"$"+everythingAboutABook?.bookPrice}
+              {"$" + everythingAboutABook?.bookPrice}
             </h4>
             <p>
               <span className="span">Rating: </span>{" "}
@@ -175,10 +209,30 @@ function ViewBook(props) {
               </p>
             </p>
           </div>
-          {/* <hr></hr>
-          <button onClick={() => bookMarkBook(everythingAboutABook.bookId)}> <FavoriteIcon /> </button> */}
           <hr></hr>
-           <button className='btn btn-primary btn-block' onClick ={() => goFoeward(everythingAboutABook.bookPrice)}>Buy/Read</button>
+          {everythingAboutABook.bookPrice === 0 && (
+            <button
+              className="btn btn-primary btn-block"
+              onClick={() => goFoeward(everythingAboutABook.bookPrice)}
+            >
+              Buy/Read for free
+            </button>
+          )}
+
+          {everythingAboutABook.bookPrice != 0 && (
+            <StripeCheckout
+              stripeKey="pk_test_51HQ95EGDqSRH3V7uxJvl8r3mseUdSEPRZONzMMvfWQ3ueSPEidjqs1ZCp2nFbdfEh0rYmL9reca9y9FWy5rUReT60027P8FUMl"
+              name="Buy/Read"
+              token={makePayment}
+              amount={everythingAboutABook.bookPrice * 100}
+            >
+              <button className="btn btn-primary btn-block">
+                Buy/Read with ${everythingAboutABook.bookPrice}
+              </button>
+            </StripeCheckout>
+            // <button className='btn btn-primary btn-block'>Buy/Read</button>
+          )}
+
           <hr></hr>
           <div className="viewBook__addReview">
             <h4>Give a review</h4>
@@ -228,7 +282,7 @@ function ViewBook(props) {
                     <span>Rating: </span> <p>{review.rating}</p>
                   </div>
                 ))} */}
-                <Reviews reviews = {reviews}/>
+                <Reviews reviews={reviews} />
               </div>
             )}
           </div>

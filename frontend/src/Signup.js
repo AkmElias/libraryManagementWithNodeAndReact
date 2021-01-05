@@ -8,6 +8,7 @@ import { useStateValue } from "./globalState/StateProvider";
 function Signup() {
   const { register, handleSubmit, errors } = useForm();
   const [{ user }] = useStateValue();
+  const history = useHistory()
 
   useEffect(() => {
     if (user) {
@@ -30,9 +31,11 @@ function Signup() {
       })
       .then((data) => {
         console.log("response data..", data);
+        history.push("/sign-in")
       })
       .catch((error) => {
         console.log(error);
+        alert("something went wrong! maybe wrong!")
       });
   };
 
