@@ -3,11 +3,13 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const {OAuth2Client} = require('google-auth-library')
+const { OAuth2Client } = require("google-auth-library");
 const User = require("../models/User");
 const { registerValidation, loginValidation } = require("../validation");
 
-const outhClient = new OAuth2Client('819867897528-fgr4r0oej769ssbu1ivnp44ppqoafplt.apps.googleusercontent.com')
+const outhClient = new OAuth2Client(
+  "819867897528-fgr4r0oej769ssbu1ivnp44ppqoafplt.apps.googleusercontent.com"
+);
 
 exports.signup = async (req, res, next) => {
   //validate before creating a new user
@@ -52,59 +54,88 @@ exports.login = async (req, res, next) => {
 
   //Create and assign token
   // @ts-ignore
-  const token = jwt.sign(
-    { _id: user._id, role: user.Role },
-    process.env.TOKEN_SECRET
-  );
+  console.log("user: ", user);
+  if (user) {
+    try {
+      const token = jwt.sign(
+        { _id: user._id, role: user.Role,email: user.Email},
+        process.env.TOKEN_SECRET
+      );
+      console.log("token:", token);
 
-  res.header("auth-token", token).send({ user: {_id: user._id, name: user.Name, role: user.Role,token:token} });
+      res
+        .header("auth-token", token)
+        .send({
+          user: {
+            _id: user._id,
+            name: user.Name,
+            role: user.Role,
+            token: token,
+          },
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  }
 };
 
-
-exports.googleLogin = async (req,res,next) => {
-    //console.log('google..',req.body.tokenId)
-    outhClient.verifyIdToken({idToken: req.body.tokenId,audience: '819867897528-fgr4r0oej769ssbu1ivnp44ppqoafplt.apps.googleusercontent.com'}).then(response => {
+exports.googleLogin = async (req, res, next) => {
+  //console.log('google..',req.body.tokenId)
+  outhClient
+    .verifyIdToken({
+      idToken: req.body.tokenId,
+      audience:
+        "819867897528-fgr4r0oej769ssbu1ivnp44ppqoafplt.apps.googleusercontent.com",
+    })
+    .then((response) => {
       // const {email_verified,name,email} = response;
       let email_verified = response.payload.email_verified;
       let email = response.payload.email;
       let name = response.payload.name;
 
-     if(email_verified){
-        User.findOne({Email: email}).exec( async (err,user) => {
-          if(err) {
-          return res.status(400).json({
-            error: 'Something went wrong!'
-          })
+      if (email_verified) {
+        User.findOne({ Email: email }).exec(async (err, user) => {
+          if (err) {
+            return res.status(400).json({
+              error: "Something went wrong!",
+            });
           } else {
-            if(user) {
+            if (user) {
               const token = jwt.sign(
-                { _id: user._id, role: user.Role },
+                { _id: user._id, role: user.Role, email: user.Email},
                 process.env.TOKEN_SECRET
               );
-             // console.log('auth-token',token)
-             res.header("auth-token", token).send({user: {_id: user._id, name: user.Name,role: user.Role,token:token}});
+              // console.log('auth-token',token)
+              res
+                .header("auth-token", token)
+                .send({
+                  user: {
+                    _id: user._id,
+                    name: user.Name,
+                    role: user.Role,
+                    token: token,
+                  },
+                });
             } else {
-              let hashedPassword = bcrypt.hashSync(email + name , 8);
+              let hashedPassword = bcrypt.hashSync(email + name, 8);
               const user = new User({
                 Name: name,
                 Email: email,
-                Password: hashedPassword
-              })
-              
+                Password: hashedPassword,
+              });
+
               try {
                 const userSaved = await user.save();
                 res.status(201).json({ user: user._id });
               } catch (err) {
-                res.status(400).json({ error: 'something went wrong!' });
+                res.status(400).json({ error: "something went wrong!" });
               }
             }
           }
-
-        })
-     }
-
-    })
-}
+        });
+      }
+    });
+};
 
 exports.getUser = async (req, res, next) => {
   try {

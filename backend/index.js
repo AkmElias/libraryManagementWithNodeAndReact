@@ -1,3 +1,4 @@
+// @ts-nocheck
 const express = require('express');
 const bodyParser = require('body-parser')
 const cors = require('cors')
@@ -23,6 +24,7 @@ const reviewRoutes = require('./routes/reviews')
 app.use('/auth', authRoutes)
 // @ts-ignore
 app.use('/books',bookRoutes);
+
 
 app.get('/', (req,res) => {
     res.send('Hi there :D!')

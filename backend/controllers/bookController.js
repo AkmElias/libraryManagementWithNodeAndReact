@@ -6,6 +6,9 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+const { v4: uuidv4 } = require('uuid');
+
 const verify = require("../verifytoken");
 const Book = require("../models/Book");
 const User = require("../models/User");
@@ -158,5 +161,34 @@ exports.addReview = async (req,res,next) => {
     } catch (err) {
         res.status(401).send(err)
     }
+}
+
+exports.payment = async (req,res,next) => {
+  
+  let {token,product} = req.body;
+  console.log("product: hahha", req.body)
+
+  const idempotencyKey = uuidv4();
+
+  return stripe.customers.create({
+    email: token.email,
+    source: token.id
+  }).then(customer => {
+    stripe.charges.create({
+      amount: product.price * 100,
+      currency: 'usd',
+      customer: customer.id,
+      receipt_email: token.email,
+      description: `purchase of ${product.name}`,
+    }, {idempotencyKey})
+    .then(result => {
+      res.status(200).json(result)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  })
+
+
 }
 
