@@ -36,10 +36,10 @@ function Login() {
       .then(async (data) => {
        
         localStorage.setItem('user',JSON.stringify(data.user))
-        await dispatch({
-          type: 'SET_USER',
-          user: data.user
-        })
+        // await dispatch({
+        //   type: 'SET_USER',
+        //   user: data.user
+        // })
         // console.log('data: ', JSON.parse(localStorage.getItem('user')))
         history.push("/books");
       })
@@ -70,10 +70,10 @@ function Login() {
       })
       .then(async (data) => {
         localStorage.setItem('user',JSON.stringify(data.user))
-        await dispatch({
-          type: 'SET_USER',
-          user: data.user
-        })
+        // await dispatch({
+        //   type: 'SET_USER',
+        //   user: data.user
+        // })
         // console.log('data: ', JSON.parse(localStorage.getItem('user')))
         history.push("/books");
       })
