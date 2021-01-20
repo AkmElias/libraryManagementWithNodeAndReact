@@ -6,9 +6,9 @@ import {
 
 import { useStateValue } from "./globalState/StateProvider";
 
-const user = JSON.parse(localStorage.getItem('user'))
-
 function Home() {
+  
+  const user = JSON.parse(localStorage.getItem('user'))
   const [{books }] = useStateValue();
   const history = useHistory();
 

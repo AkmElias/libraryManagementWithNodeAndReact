@@ -4,9 +4,8 @@ import { useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
 import "./Signup.css";
 
-const user = JSON.parse(localStorage.getItem('user'))
-
 function Signup() {
+  const user = JSON.parse(localStorage.getItem('user'))
   const { register, handleSubmit, errors } = useForm();
   
   const history = useHistory()

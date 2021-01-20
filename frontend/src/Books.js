@@ -47,7 +47,9 @@ function Books() {
 
   useEffect(async () => {
     console.log('user from local storage: ',user)
-    if (user === null)console.log('user from local storage: ',user)
+    if (user === null){
+      history.push('/sign-in')
+    }
     else {
       fetchBooks();
     }
