@@ -9,25 +9,21 @@ import ViewCompactIcon from "@material-ui/icons/ViewCompact";
 import UpdateIcon from "@material-ui/icons/Update";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import UpdateBook from "./UpdateBook";
-import ViewBook from "./ViewBook";
 import "./Books.css";
-import { useStateValue } from "./globalState/StateProvider";
+
 
 function Books() {
   const { register, handleSubmit, errors } = useForm();
   const [booksList, setBooksList] = useState([]);
   const [tempBooklist,setTempBookList] = useState([]);
-  const [ucategory, setUcategory] = useState("");
-  const [uprice, setUprice] = useState(0);
-  const [upaid, setUpaid] = useState("");
-  const [book, setBook] = useState({});
-  const [disabled, setDisabled] = useState(false);
   const [trigger, setTrigger] = useState(false);
-  const [{ user, books }, dispatch] = useStateValue();
+  const user = JSON.parse(localStorage.getItem('user'))
+  // const [{books }, dispatch] = useStateValue();
+  
   const history = useHistory();
 
-  const fetchBooks = () => {
-    console.log("token..", user);
+  const fetchBooks = async () => {
+    console.log("token..", user.token);
     fetch("http://localhost:8080/books/", {
       method: "GET",
       headers: {
@@ -49,8 +45,9 @@ function Books() {
       });
   };
 
-  useEffect(() => {
-    if (user == null) history.push("/sign-in");
+  useEffect(async () => {
+    console.log('user from local storage: ',user)
+    if (user === null)console.log('user from local storage: ',user)
     else {
       fetchBooks();
     }
@@ -256,7 +253,7 @@ function Books() {
               <tbody>
                 {booksList.length > 0 ? (
                   booksList.map((book, key) => (
-                    <tr>
+                    <tr key={book._id}>
                       <td>1</td>
                       <td>{book.name}</td>
                       <td>{book.author}</td>

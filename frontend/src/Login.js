@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect } from "react";
+import React, { useEffect} from "react";
 import { useForm } from "react-hook-form";
 import GoogleLogin from "react-google-login";
 import { Link, useHistory } from "react-router-dom";
@@ -7,13 +7,16 @@ import { useStateValue } from "./globalState/StateProvider";
 import "./Login.css";
 
 function Login() {
+  const user = JSON.parse(localStorage.getItem('user'));
   const { register, handleSubmit, errors } = useForm();
-  const [{ user, books }, dispatch] = useStateValue();
+  const [{books},dispatch] = useStateValue();
+ 
   const history = useHistory();
 
   useEffect(() => {
-    if (user) {
-      history.push("/sign-up");
+    if (user !== null) {
+       history.push("/books");
+      console.log('user...',user)
     }
     return () => {};
   }, []);
@@ -31,11 +34,13 @@ function Login() {
         return response.json();
       })
       .then(async (data) => {
-        // alert(`Token: ${data}`)
+       
+        localStorage.setItem('user',JSON.stringify(data.user))
         await dispatch({
-          type: "SET_USER",
+          type: 'SET_USER',
           user: data.user
-        });
+        })
+        // console.log('data: ', JSON.parse(localStorage.getItem('user')))
         history.push("/books");
       })
       .catch((error) => {
@@ -63,11 +68,13 @@ function Login() {
       .then((user) => {
         return user.json();
       })
-      .then((data) => {
-        dispatch({
-          type: "SET_USER",
-          user: data.user,
-        });
+      .then(async (data) => {
+        localStorage.setItem('user',JSON.stringify(data.user))
+        await dispatch({
+          type: 'SET_USER',
+          user: data.user
+        })
+        // console.log('data: ', JSON.parse(localStorage.getItem('user')))
         history.push("/books");
       })
       .catch((error) => {

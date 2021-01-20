@@ -3,16 +3,19 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
 import "./Signup.css";
-import { useStateValue } from "./globalState/StateProvider";
+
+const user = JSON.parse(localStorage.getItem('user'))
 
 function Signup() {
   const { register, handleSubmit, errors } = useForm();
-  const [{ user }] = useStateValue();
+  
   const history = useHistory()
 
   useEffect(() => {
-    if (user) {
+    
+    if (user !== null) {
       console.log("user: ", user);
+      history.push('/books')
     }
     return () => {};
   }, []);

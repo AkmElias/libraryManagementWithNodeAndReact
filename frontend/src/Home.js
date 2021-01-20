@@ -1,24 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import {
   BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
   useHistory,
 } from "react-router-dom";
-import Login from "./Login";
-import Signup from "./Signup";
+
 import { useStateValue } from "./globalState/StateProvider";
 
+const user = JSON.parse(localStorage.getItem('user'))
+
 function Home() {
-  const [{ user, books }] = useStateValue();
+  const [{books }] = useStateValue();
   const history = useHistory();
 
   useEffect(() => {
-    if (!user) {
-      console.log("user..", user);
+   
+    if (user === null) {
+      console.log("user is null..", user);
       history.push("/sign-in");
     } else {
+      console.log('user from localstorage: which should not be null..',user)
       history.push('/books')
     }
     return () => {};

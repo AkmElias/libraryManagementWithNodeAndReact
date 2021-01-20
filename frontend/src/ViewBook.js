@@ -3,15 +3,17 @@ import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import ReactStars from "react-rating-stars-component";
 import StarRatings from "react-star-ratings";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import { useForm } from "react-hook-form";
+// import FavoriteIcon from "@material-ui/icons/Favorite";
+// import { useForm } from "react-hook-form";
 import StripeCheckout from "react-stripe-checkout";
-import { useStateValue } from "./globalState/StateProvider";
+// import { useStateValue } from "./globalState/StateProvider";
 import Reviews from "./Reviews";
 import "./ViewBook.css";
 
+
+
 function ViewBook(props) {
-  const [{ user }] = useStateValue();
+  const user = JSON.parse(localStorage.getItem('user'))
   const [id, setId] = useState("");
   const [rating, setRating] = useState(0);
   const [reviews, setReviews] = useState([]);
@@ -48,8 +50,8 @@ function ViewBook(props) {
   };
 
   useEffect(async () => {
-    if (!user) {
-      history.push("/sign-up");
+    if (user === null) {
+      history.push("/sign-in");
     } else {
       setId(window.location.pathname.split("/")[2]);
       console.log("id: ", window.location.pathname.split("/"));
@@ -222,7 +224,7 @@ function ViewBook(props) {
 
           {everythingAboutABook.bookPrice != 0 && (
             <StripeCheckout
-              stripeKey="pk_test_51HQ95EGDqSRH3V7uxJvl8r3mseUdSEPRZONzMMvfWQ3ueSPEidjqs1ZCp2nFbdfEh0rYmL9reca9y9FWy5rUReT60027P8FUMl"
+              stripeKey="pk_test_51HQ95EGDqSRH3V7uHcrv6POGL8R5XXq4JrBeVVj26o2M6MfoaKaWIMwOytJfg1nZE3F2UENDu3i8j9nH8PxOYsQ400FJPCZHx4"
               name="Buy/Read"
               token={makePayment}
               amount={everythingAboutABook.bookPrice * 100}

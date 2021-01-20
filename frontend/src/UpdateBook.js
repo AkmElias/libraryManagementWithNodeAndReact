@@ -1,10 +1,9 @@
 // @ts-nocheck
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useStateValue } from "./globalState/StateProvider";
 
 function UpdateBook({book,close,fetchBooks,refreshList}) {
-  const [{ user, books }, dispatch] = useStateValue();
+  const user = JSON.parse(localStorage.getItem('user'))
   const { register, handleSubmit } = useForm({
     defaultValues: {
       category: book.category,
@@ -15,7 +14,7 @@ function UpdateBook({book,close,fetchBooks,refreshList}) {
   const [disable,setDisable] = useState(book.paid === true ? true : false);
 
   const onSubmit = ({category,paid,price}) => {
-
+  
       if(paid === "free") {
           book.price = 0;
           book.paid = false;
